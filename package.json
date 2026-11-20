@@ -25,6 +25,7 @@
   "build": {
     "appId": "app.openphoto.desktop",
     "productName": "OpenPhoto",
+    "icon": "build/icon.png",
     "directories": {
       "output": "release"
     },
@@ -46,11 +47,14 @@
       "node_modules/@img/**"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
     }
   },
   "dependencies": {

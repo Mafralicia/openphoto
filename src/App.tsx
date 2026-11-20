@@ -542,7 +542,10 @@ export const App: React.FC = () => {
       onDrop={handleDrop}
     >
       <aside className="sidebar">
-        <div className="sidebar-brand drag-region">OpenPhoto</div>
+        <div className="sidebar-brand drag-region">
+          <img src="/icon.png" alt="" className="sidebar-brand-icon" />
+          <span>OpenPhoto</span>
+        </div>
 
         <nav className="nav-group" aria-label="Biblioteca">
           {SCOPES.map((s) => (

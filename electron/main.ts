@@ -76,6 +76,7 @@ async function start(): Promise<void> {
     minHeight: 560,
     backgroundColor: '#ffffff',
     title: 'OpenPhoto',
+    icon: path.join(appRoot, 'dist', 'icon.png'),
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#ffffff', symbolColor: '#1c1c1c', height: 52 },
     show: false,

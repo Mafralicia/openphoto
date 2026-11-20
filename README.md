@@ -13,7 +13,7 @@ Biblioteca de fotos e vídeos para Windows que lê direto do disco, inclusive de
 
 ## Instalar
 
-Baixe o instalador mais recente em [Releases](https://github.com/grandir-gif/openphoto/releases). Para HEIC e miniaturas de vídeo, tenha o [ffmpeg](https://ffmpeg.org/download.html) 7.1 ou mais novo no `PATH`.
+Baixe o instalador mais recente em [Releases](https://github.com/mafralicia/openphoto/releases). Para HEIC e miniaturas de vídeo, tenha o [ffmpeg](https://ffmpeg.org/download.html) 7.1 ou mais novo no `PATH`.
 
 ## Desenvolver
 

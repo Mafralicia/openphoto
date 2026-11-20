@@ -6,11 +6,11 @@
   "main": "dist-electron/main.cjs",
   "description": "Local-first photo library",
   "license": "MIT",
-  "author": "grandir-gif",
-  "homepage": "https://github.com/grandir-gif/openphoto",
+  "author": "mafralicia",
+  "homepage": "https://github.com/mafralicia/openphoto",
   "repository": {
     "type": "git",
-    "url": "https://github.com/grandir-gif/openphoto.git"
+    "url": "https://github.com/mafralicia/openphoto.git"
   },
   "scripts": {
     "app": "npm run build && electron .",
@@ -32,7 +32,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "grandir-gif",
+        "owner": "mafralicia",
         "repo": "openphoto",
         "releaseType": "release"
       }

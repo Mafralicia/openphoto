@@ -1,10 +1,16 @@
 name: Release
 
-# Push a version tag (npm version patch && git push --follow-tags) to build the Windows installer and
-# publish it as a GitHub Release. Installed apps pick it up through electron-updater (latest.yml).
+# Builds the Windows installer + latest.yml and publishes a GitHub Release so installed
+# desktop apps update automatically via electron-updater.
+# Triggers on:
+#   - push to main whenever package.json version does not have a v<version> tag yet
+#   - explicit v* tags (e.g. npm version patch && git push --follow-tags)
+#   - manual workflow_dispatch
 on:
   push:
+    branches: [main]
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,12 +20,54 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npx electron-builder --win --publish always
+
+      - name: Check if version needs release
+        id: check
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "v$version"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          if ("${{ github.event_name }}" -eq "workflow_dispatch" -or "${{ github.ref_type }}" -eq "tag") {
+            "should_release=true" >> $env:GITHUB_OUTPUT
+          } else {
+            git rev-parse -q --verify "refs/tags/$tag" | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "Tag $tag already exists; skipping release."
+              "should_release=false" >> $env:GITHUB_OUTPUT
+            } else {
+              Write-Host "New version $tag detected on main; will build and publish release."
+              "should_release=true" >> $env:GITHUB_OUTPUT
+            }
+          }
+
+      - name: Install dependencies
+        if: steps.check.outputs.should_release == 'true'
+        run: npm ci
+
+      - name: Build app
+        if: steps.check.outputs.should_release == 'true'
+        run: npm run build
+
+      - name: Tag version if triggered from main
+        if: steps.check.outputs.should_release == 'true' && github.ref_type != 'tag'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.check.outputs.tag }}"
+          git push origin "${{ steps.check.outputs.tag }}"
+
+      - name: Build Windows installer & publish GitHub Release
+        if: steps.check.outputs.should_release == 'true'
+        run: npx electron-builder --win --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

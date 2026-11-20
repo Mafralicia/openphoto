@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.openphoto/
+*.log
+dist-electron/
+release/
+sample-photos/

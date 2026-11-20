@@ -1,0 +1,25 @@
+name: Release
+
+# Push a version tag (npm version patch && git push --follow-tags) to build the Windows installer and
+# publish it as a GitHub Release. Installed apps pick it up through electron-updater (latest.yml).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

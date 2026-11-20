@@ -1,0 +1,78 @@
+{
+  "name": "openphoto",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.cjs",
+  "description": "Local-first photo library",
+  "license": "MIT",
+  "author": "grandir-gif",
+  "homepage": "https://github.com/grandir-gif/openphoto",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grandir-gif/openphoto.git"
+  },
+  "scripts": {
+    "app": "npm run build && electron .",
+    "dist": "npm run build && electron-builder --win",
+    "dev": "concurrently -n API,UI -c cyan,magenta \"npm run dev:server\" \"npm run dev:ui\"",
+    "dev:server": "tsx watch server/index.ts",
+    "dev:ui": "vite",
+    "build": "tsc -p tsconfig.json && vite build && node scripts/build-electron.mjs",
+    "start": "tsx server/index.ts",
+    "test": "tsx --test server/library.test.ts"
+  },
+  "build": {
+    "appId": "app.openphoto.desktop",
+    "productName": "OpenPhoto",
+    "directories": {
+      "output": "release"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "grandir-gif",
+        "repo": "openphoto",
+        "releaseType": "release"
+      }
+    ],
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/sharp/**",
+      "node_modules/@img/**"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11",
+    "exifr": "^7.1.3",
+    "lucide-react": "^0.511.0",
+    "maplibre-gl": "^6.19.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "concurrently": "^9.1.2",
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}
